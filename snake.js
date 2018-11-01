@@ -1,27 +1,66 @@
 class Snake {
+
   constructor() {
-    this.x = 0;
-    this.y = 0;
-    this.xspeed = 1;
-    this.yspeed = 0;
-    this.scale = 20;
+    this.len = 1;
+    this.body = [];
+    this.body[0] = createVector(floor(w/2), floor(h/2));
+    this.xdir = 0;
+    this.ydir = 0;
+  }
+
+  setDir(x, y) {
+    this.xdir = x;
+    this.ydir = y;
   }
 
   update() {
-    this.x += this.xspeed * this.scale;
-    this.y += this.yspeed * this.scale;
+    let head = this.body[this.body.length-1].copy();
+    this.body.shift();
+    head.x += this.xdir;
+    head.y += this.ydir;
+    this.body.push(head);
 
-    this.x = constrain(this.x, 0, width-this.scale);
-    this.y = constrain(this.y, 0, height-this.scale);
+    // this.body[0].x += this.xdir;
+    // this.body[0].y += this.ydir;
+  }
+
+  grow() {
+    let head = this.body[this.body.length-1].copy();
+    this.let++;
+    this.body.push(head);
+  }
+
+  endGame() {
+    let x = this.body[this.body.length-1].x;
+    let y = this.body[this.body.length-1].y;
+    if (x > w-1 || x < 0 || y > h || y < 0) {
+      return true;
+    }
+    for (let i = 0; i < this.body.length-1; i++) {
+      let part = this.body[i];
+      if (part.x == x && part.y == y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  eat(pos) {
+    let x = this.body[this.body.length-1].x;
+    let y = this.body[this.body.length-1].y;
+    if (x == pos.x && y == pos.y) {
+      this.grow();
+      return true;
+    }
+    return false;
   }
 
   show() {
-    fill(255);
-    rect(this.x, this.y, this.scale, this.scale);
+    for(let i = 0; i < this.body.length; i++) {
+      fill(0);
+      noStroke();
+      rect(this.body[i].x, this.body[i].y, 1, 1);
+    }
   }
 
-  dir(x, y) {
-    this.xspeed = x;
-    this.yspeed = y;
-  }
 }

@@ -1,32 +1,53 @@
-var s;
-var scale = 20;
 
-var food;
+let snake;
+let food;
+let res = 20;
+let w;
+let h;
 
 function setup() {
   createCanvas(600, 600);
-  s = new Snake();
-  food = new Food();
+  w = floor(width / res);
+  h = floor(height / res);
   frameRate(10);
+  snake = new Snake();
+  foodLocation();
 }
 
-function draw() {
-  background(51);
-  s.update();
-  s.show();
-
-  food.update();
-  food.show();
+function foodLocation() {
+  let x = floor(random(w));
+  let y = floor(random(h));
+  food = createVector(x, y);
 }
 
 function keyPressed() {
   if (keyCode === UP_ARROW) {
-    s.dir(0, -1);
+    snake.setDir(0, -1);
   } else if (keyCode === DOWN_ARROW) {
-    s.dir(0, 1);
+    snake.setDir(0, 1);
   } else if (keyCode === LEFT_ARROW) {
-    s.dir(-1, 0);
+    snake.setDir(-1, 0);
   } else if (keyCode === RIGHT_ARROW) {
-    s.dir(1, 0);
+    snake.setDir(1, 0);
   }
+}
+
+function draw() {
+  scale(res);
+  background(220);
+  if (snake.eat(food)) {
+    foodLocation();
+  }
+  snake.update();
+  snake.show();
+
+  if (snake.endGame()) {
+    print('End Game!');
+    background(255, 0, 0);
+    noLoop();
+  }
+
+  noStroke();
+  fill(255, 0, 0);
+  rect(food.x, food.y, 1, 1);
 }
