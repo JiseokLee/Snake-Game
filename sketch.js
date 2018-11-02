@@ -43,8 +43,8 @@ function draw() {
 
   if (snake.endGame()) {
     print('End Game!');
-    background(255, 0, 0);
-    noLoop();
+    snake.body = [];
+    snake.body[0] = createVector(floor(w/2), floor(h/2));;
   }
 
   noStroke();
